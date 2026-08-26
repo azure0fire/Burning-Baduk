@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>불타는 바둑</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="ember-bg"></div>
+
+<!-- 화면 1: 시작 화면 -->
+<section id="screen-start" class="screen active">
+  <h1 class="brand">불타는 <span class="brand-accent">바둑</span></h1>
+  <p class="subtitle">이름을 정하고, 온라인 대국 또는 오프라인 대국을 시작하세요</p>
+
+  <div class="panel">
+    <label class="field-label" for="input-name">내 이름</label>
+    <input id="input-name" class="text-input" type="text" maxlength="20" placeholder="이름을 입력하세요" />
+
+    <div class="mode-buttons">
+      <button id="btn-mode-online" class="btn btn-primary">온라인</button>
+      <button id="btn-mode-offline" class="btn btn-secondary">오프라인</button>
+    </div>
+  </div>
+</section>
+
+<!-- 화면 2: 온라인 선택 (만들기/입장하기) -->
+<section id="screen-online-select" class="screen">
+  <h2 class="section-title">온라인 대국</h2>
+  <div class="panel">
+    <button id="btn-create-room" class="btn btn-primary btn-block">방 만들기</button>
+    <button id="btn-join-room-open" class="btn btn-secondary btn-block">방 입장하기</button>
+    <button class="btn btn-ghost btn-block back-btn" data-target="screen-start">뒤로</button>
+  </div>
+</section>
+
+<!-- 화면 2-1: 방 코드 입력 -->
+<section id="screen-join-code" class="screen">
+  <h2 class="section-title">방 입장하기</h2>
+  <div class="panel">
+    <label class="field-label" for="input-code">7자리 방 코드</label>
+    <input id="input-code" class="text-input code-input" type="text" inputmode="numeric" maxlength="7" placeholder="0000000" />
+    <button id="btn-join-submit" class="btn btn-primary btn-block">입장</button>
+    <p id="join-error" class="error-text"></p>
+    <button class="btn btn-ghost btn-block back-btn" data-target="screen-online-select">뒤로</button>
+  </div>
+</section>
+
+<!-- 화면 2-2: 방 생성 완료 / 대기 -->
+<section id="screen-waiting" class="screen">
+  <h2 class="section-title">상대를 기다리는 중</h2>
+  <div class="panel center-panel">
+    <p class="field-label">이 코드를 상대에게 알려주세요</p>
+    <div id="room-code-display" class="room-code-ember">0000000</div>
+    <p class="hint-text">상대가 입장하면 자동으로 대국이 시작됩니다 (방을 만든 사람 = 흑돌)</p>
+  </div>
+</section>
+
+<!-- 화면 3: 오프라인 설정 -->
+<section id="screen-offline-setup" class="screen">
+  <h2 class="section-title">오프라인 대국</h2>
+  <div class="panel">
+    <label class="field-label">흑돌 플레이어</label>
+    <input id="input-name-black" class="text-input" type="text" maxlength="20" placeholder="흑돌 이름" />
+    <label class="field-label">백돌 플레이어</label>
+    <input id="input-name-white" class="text-input" type="text" maxlength="20" placeholder="백돌 이름" />
+    <button id="btn-offline-start" class="btn btn-primary btn-block">대국 시작</button>
+    <button class="btn btn-ghost btn-block back-btn" data-target="screen-start">뒤로</button>
+  </div>
+</section>
+
+<!-- 화면 4: 게임 화면 -->
+<section id="screen-game" class="screen">
+  <header class="game-header">
+    <div class="player-tag" id="tag-black">
+      <span class="stone-dot stone-black"></span>
+      <span id="name-black">흑</span>
+    </div>
+    <div class="turn-indicator" id="turn-indicator">흑돌 차례</div>
+    <div class="player-tag" id="tag-white">
+      <span class="stone-dot stone-white"></span>
+      <span id="name-white">백</span>
+    </div>
+  </header>
+
+  <div class="board-wrap">
+    <canvas id="board" width="760" height="760"></canvas>
+  </div>
+
+  <div class="game-controls">
+    <button id="btn-pass" class="btn btn-secondary">차례 넘기기 (패스)</button>
+    <button id="btn-resign" class="btn btn-danger">기권</button>
+    <button id="btn-leave" class="btn btn-ghost">나가기</button>
+  </div>
+
+  <p id="game-message" class="hint-text"></p>
+</section>
+
+<!-- 결과 모달 -->
+<div id="result-modal" class="modal hidden">
+  <div class="modal-box">
+    <h2 id="result-title">대국 종료</h2>
+    <p id="result-body"></p>
+    <button id="btn-result-close" class="btn btn-primary">확인</button>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="client.js"></script>
+</body>
+</html>
